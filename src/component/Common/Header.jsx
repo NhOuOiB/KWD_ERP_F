@@ -41,12 +41,12 @@ const Header = () => {
           label: '出勤',
           children: [
             {
-              label: <Link to={''}>請假</Link>,
-              key: 'takeLeave',
+              label: <Link to={'/HR/leave'}>查詢出勤</Link>,
+              key: 'leave',
             },
             {
-              label: <Link to={''}>查詢出勤</Link>,
-              key: 'leave',
+              label: <Link to={'/HR/addLeave'}>請假</Link>,
+              key: 'addLeave',
             },
           ],
         },

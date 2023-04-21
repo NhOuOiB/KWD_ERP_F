@@ -1,5 +1,7 @@
+@import '../main.scss';
+
 .dropDown {
   border: 1px solid ;
   border-radius: 50px;
-  background: #0369a1;
+  background: $mainColor;
 }

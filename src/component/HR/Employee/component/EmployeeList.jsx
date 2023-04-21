@@ -31,9 +31,9 @@ const EmployeeList = ({ setEid }) => {
     setEid(v.employee_id)
   }
   return (
-    <div className="w-80 h-[50rem] h-max-[48.75rem] bg-white rounded-[5px] m-y-2 text-neutral-800 px-3 pt-12 relative left-0">
-      <div className="relative">
-        <div className="px-2 py-1 h-8 pointer-events-none absolute left-[3.4rem] flex items-center">
+    <div className="w-80 h-[50rem] h-max-[48.75rem] bg-white rounded-[5px] m-y-2 text-neutral-800 px-3 pt-12 left-0">
+      <div className="relative w-fit m-auto">
+        <div className="px-2 py-1 h-8 pointer-events-none absolute flex items-center">
           <IconContext.Provider value={{ size: '1.4rem' }}>
             <AiOutlineSearch />
           </IconContext.Provider>

@@ -198,7 +198,7 @@ const AddEmployee = () => {
                     placeholder=""
                     id={v.name}
                     value={v.value}
-                    onChange={v.name == 'sign' ? handleZodiacSign : handleChange}
+                    onChange={handleChange}
                   />
                 )}
               </div>

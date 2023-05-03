@@ -79,7 +79,6 @@ const AddLeave = () => {
   async function handleSubmit() {
     let reject;
     leave.map((v, i) => {
-      console.log(v);
       if (v.begin == '' || v.end == '' || v.employee_id == '' || v.leave_id == '' || v.hour == '') {
         toast.error('有內容未填', {
           position: 'top-center',
@@ -178,6 +177,8 @@ const AddLeave = () => {
                       handleChange={handleChange}
                       clear={clear}
                       setClear={setClear}
+                      width={'12rem'}
+                      radius={'5px'}
                     />
                   </td>
                   <td className="border border-white-600">
@@ -192,6 +193,8 @@ const AddLeave = () => {
                       handleChange={handleChange}
                       clear={clear}
                       setClear={setClear}
+                      width={'12rem'}
+                      radius={'5px'}
                     />
                   </td>
                   <td className="border border-white-600">

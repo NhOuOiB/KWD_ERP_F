@@ -31,15 +31,15 @@ const Leave = () => {
           <tbody className="bg-white">
             {leave.map((v, i) => {
               return (
-                <tr className="border border-white-600 text-[#333] " key={i}>
-                  <td className="border-0 border-white-600 p-2">
+                <tr className=" text-[#444] " key={i}>
+                  <td className="border-y py-2 px-2">
                     {v.begin} ~ {v.end}
                   </td>
-                  <td className="border border-white-600 p-2">{v.name}</td>
-                  <td className="border border-white-600 p-2">{v.leave_name}</td>
-                  <td className="border border-white-600 p-2 text-right">{v.hour}小時</td>
-                  <td className="border border-white-600 p-2 max-w-[16rem] w-16">{v.note}</td>
-                  <td className="border border-white-600 p-2">{v.time}</td>
+                  <td className="border-y px-8">{v.name}</td>
+                  <td className="border-y px-8">{v.leave_name}</td>
+                  <td className="border-y text-right px-8">{v.hour}小時</td>
+                  <td className="border-y max-w-[16rem] w-16 px-8">{v.note}</td>
+                  <td className="border-y px-2">{v.time}</td>
                 </tr>
               );
             })}

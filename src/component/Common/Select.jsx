@@ -20,32 +20,8 @@ const Select = ({
   radius,
   defaultValue,
 }) => {
-  function calculateInitialValue() {
-    if (defaultValue) {
-      console.log(data);
-      data.map((v) => {
-        // console.log('data_id', v[data_id]);
-        // console.log('defaultValue', defaultValue);
-        if (v[data_id] == defaultValue) {
-          console.log(v[data_id]);
-          console.log(defaultValue);
-          console.log(v[data_name]);
-          return `${v[data_name]}`;
-        }
-      });
-    }
-    return '請選擇';
-  }
   const [selected, setSelected] = useState('請選擇');
   const [display, setDisplay] = useState(false);
-  const [hovered, setHovered] = useState('');
-  const handleMouseEnter = (e) => {
-    setHovered(e.target.value);
-  };
-
-  const handleMouseLeave = () => {
-    setHovered('');
-  };
 
   function handleClickul() {
     setDisplay(!display);

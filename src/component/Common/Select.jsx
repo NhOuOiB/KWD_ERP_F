@@ -20,9 +20,8 @@ const Select = ({
   radius,
   defaultValue,
 }) => {
-  const [selected, setSelected] = useState('請選擇');
+  const [selected, setSelected] = useState(defaultValue ? `${data.find((v) => v[data_id] === defaultValue)[data_name]}` : '請選擇');
   const [display, setDisplay] = useState(false);
-
   function handleClickul() {
     setDisplay(!display);
   }
@@ -43,6 +42,8 @@ const Select = ({
           setSelected(`${v[data_name]}`);
         }
       });
+    } else {
+      setSelected('請選擇');
     }
   }, [clear, defaultValue]);
   return (

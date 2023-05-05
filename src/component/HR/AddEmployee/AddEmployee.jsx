@@ -55,7 +55,6 @@ const AddEmployee = () => {
         } else if (v.type == 'select') {
           document.getElementById(`${v.name}`).value = '';
         }
-        console.log(v);
         return { ...v, value: '' };
       })
     );

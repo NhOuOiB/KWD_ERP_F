@@ -8,7 +8,6 @@ import { IconContext } from 'react-icons';
 import { AiOutlineClear } from 'react-icons/ai';
 import { MdOutlineCancel } from 'react-icons/md';
 import { BsPlusCircleFill, BsClipboard2Check } from 'react-icons/bs';
-import moment from 'moment/moment';
 
 const AddLeave = () => {
   const { TextArea } = Input;
@@ -80,24 +79,34 @@ const AddLeave = () => {
     let reject;
     leave.map((v, i) => {
       if (v.begin == '' || v.end == '' || v.employee_id == '' || v.leave_id == '' || v.hour == '') {
-        toast.error('有內容未填', {
-          position: 'top-center',
-          autoClose: 5000,
-          hideProgressBar: false,
-          closeOnClick: true,
-          pauseOnHover: true,
-          draggable: true,
-          theme: 'dark',
-        });
+        
         reject = true;
       } else {
         reject = false;
       }
     });
     if (reject) {
+      toast.error('有內容未填', {
+        position: 'top-center',
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        theme: 'dark',
+      });
       return false;
     }
-    await axios.post(`${API_URL}/addLeave`, leave);
+    let res = await axios.post(`${API_URL}/addLeave`, leave);
+    toast.success(res.data, {
+      position: 'top-center',
+      autoClose: 5000,
+      hideProgressBar: false,
+      closeOnClick: true,
+      pauseOnHover: true,
+      draggable: true,
+      theme: 'dark',
+    });
     handleClear();
   }
 

@@ -5,7 +5,6 @@ import EmployeeData from './component/EmployeeData';
 
 const Employee = () => {
   const [eid, setEid] = useState('');
-  console.log(eid);
   return (
     <div className="w-full h-full flex justify-between items-center">
       <EmployeeList setEid={setEid} />

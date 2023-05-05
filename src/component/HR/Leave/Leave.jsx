@@ -11,7 +11,6 @@ const Leave = () => {
     (async () => {
       let data = await axios.get(`${API_URL}/getLeaveRecord`);
       setLeave(data.data);
-      console.log(data.data);
     })();
   }, []);
   return (

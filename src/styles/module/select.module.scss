@@ -1,15 +1,12 @@
 @import '../main.scss';
 
 .select {
-  width: 12rem;
   position: relative;
   .select_option {
     transition: 0.4s;
     padding: 14px;
     z-index: 2;
-    &:hover {
-      background: #d1d5db;
-    }
+    border: 1px solid transparent;
   }
   .ul_container {
     width: 100%;
@@ -17,14 +14,13 @@
     position: absolute;
     overflow: hidden;
     z-index: 100;
+    box-shadow: rgba(0, 0, 0, 0.15) 0px 10px 24px 0px;
 
     .select_ul {
-      border-top: 1px solid #eee;
       transition: 0.4s;
       width: 100%;
       height: 100%;
       position: absolute;
-      height: 15.4rem;
       overflow: auto;
       padding: 10px 0;
       z-index: 0;
@@ -33,14 +29,12 @@
       .select_li {
         padding: 10px;
         margin: 0 10px;
-        border-radius: 5px;
       }
 
       .select_li_p {
         padding: 10px;
         margin: 0 10px;
-        border-radius: 5px;
-        background: skyblue;
+        background: $main_clr;
         color: #fff;
       }
     }
@@ -50,14 +44,13 @@
   }
 
   ::-webkit-scrollbar-thumb {
-    background-color: white;
+    background-color: #555;
     background-clip: padding-box;
     border-radius: 3px;
   }
 
   ::-webkit-scrollbar-track {
-    // border: 1px solid #333;
-    background-color: #555; //捲軸軌道顏色
+    background-color: white; //捲軸軌道顏色
     border-radius: 3px;
   }
 }

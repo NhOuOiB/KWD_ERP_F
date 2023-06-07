@@ -114,27 +114,27 @@ const EmployeeData = ({ eid }) => {
       const response = await axios.get(`${API_URL}/getEmployeeById?eid=${eid}`);
       const data = response.data[0] || {}; // 預設為空物件
       const {
-        id = null,
-        employee_id = null,
-        name = null,
-        department_id = null,
-        department_name = null,
-        registration_date = null,
-        leave_date = null,
-        tel = null,
-        phone = null,
-        email = null,
-        address = null,
-        gender = null,
-        ext = null,
-        emergency_contact = null,
-        emergency_contact_phone = null,
-        birth = null,
-        sign = null,
-        education = null,
-        note = null,
-        status = null,
-        status_name = null,
+        id ,
+        employee_id ,
+        name ,
+        department_id,
+        department_name ,
+        registration_date ,
+        leave_date ,
+        tel ,
+        phone ,
+        email ,
+        address ,
+        gender ,
+        ext,
+        emergency_contact ,
+        emergency_contact_phone ,
+        birth ,
+        sign ,
+        education ,
+        note ,
+        status ,
+        status_name ,
       } = data;
 
       setEmployee({
@@ -437,7 +437,7 @@ const EmployeeData = ({ eid }) => {
         </div>
       </div>
       <div className="w-full h-fit p-2 border-t bg-[#0369a1] rounded-b-[4px]">
-        <div className={`font-bold text-xl border w-fit px-2 py-1  bg-white transition ${edit ? 'opacity-1 cursor-pointer' : 'opacity-0'}`} onClick={edit ? handleSubmit : ''}>
+        <div className={`font-bold text-xl border w-fit px-2 py-1  bg-white transition ${edit ? 'opacity-1 cursor-pointer' : 'opacity-0'}`} onClick={edit ? handleSubmit : null}>
           儲存
         </div>
       </div>

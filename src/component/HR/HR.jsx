@@ -5,6 +5,7 @@ import Employee from './Employee/Employee';
 import Leave from './Leave/Leave';
 import AddLeave from './AddLeave/AddLeave';
 import auth from '../../auth/auth';
+import LeaveDays from './LeaveDays/LeaveDays';
 
 const HR = () => {
   auth();
@@ -15,6 +16,7 @@ const HR = () => {
       <Route path="/addEmployee" element={<AddEmployee />} />
       <Route path="/leave" element={<Leave />} />
       <Route path="/addLeave" element={<AddLeave />} />
+      <Route path="/leaveDays" element={<LeaveDays />} />
     </Routes>
   );
 };

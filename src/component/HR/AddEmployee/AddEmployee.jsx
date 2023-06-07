@@ -42,6 +42,7 @@ const AddEmployee = () => {
       })
     );
   }
+  console.log(input)
 
   function handleClear() {
     setInput((prevInput) =>
@@ -53,7 +54,7 @@ const AddEmployee = () => {
             radio.checked = false;
           });
         } else if (v.type == 'select') {
-          document.getElementById(`${v.name}`).value = '';
+          document.getElementById(`${v.name}`).value = '請選擇';
         }
         return { ...v, value: '' };
       })
@@ -161,8 +162,9 @@ const AddEmployee = () => {
                 {v.type === 'radio' ? (
                   v.option.map((o, i) => (
                     <label key={i} className="flex items-center me-2">
+                      <div className='m-2'>{o}</div>
                       <input type="radio" name={v.name} value={o} onChange={handleChange} className="me-1" id={v.name} />
-                      {o}
+                      <div className="radio"></div>
                     </label>
                   ))
                 ) : v.type === 'checkbox' ? (

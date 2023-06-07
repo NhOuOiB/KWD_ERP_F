@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 import { API_URL } from '../../utils/config';
@@ -6,8 +6,8 @@ import { toast } from 'react-toastify';
 
 const Login = () => {
   const [login, setLogin] = useState({
-    account: '',
-    password: '',
+    account: 'mike',
+    password: '1234',
   });
   const navigate = useNavigate();
 
@@ -32,9 +32,13 @@ const Login = () => {
       });
     }
   }
+  useEffect(() => {
+   console.log(login); 
+    handleLogin();
+  }, []);
 
   return (
-    <div className='flex justify-center items-center h-full'>
+    <div className="flex justify-center items-center h-full">
       <div className=" w-44 flex flex-col">
         <label htmlFor="account" className="text-left">
           Account

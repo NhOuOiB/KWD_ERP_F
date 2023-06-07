@@ -47,6 +47,10 @@ const Header = () => {
               label: <Link to={'/HR/addLeave'}>請假</Link>,
               key: 'addLeave',
             },
+            {
+              label: <Link to={'/HR/leaveDays'}>員工休假天數</Link>,
+              key: 'leaveDays',
+            },
           ],
         },
         {

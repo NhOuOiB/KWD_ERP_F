@@ -79,7 +79,6 @@ const AddLeave = () => {
     let reject;
     leave.map((v, i) => {
       if (v.begin == '' || v.end == '' || v.employee_id == '' || v.leave_id == '' || v.hour == '') {
-        
         reject = true;
       } else {
         reject = false;
@@ -174,7 +173,7 @@ const AddLeave = () => {
                       />
                     </Space>
                   </td>
-                  <td className="border border-white-600 ">
+                  <td className="border border-white-600 w-[12rem]">
                     <Select
                       data={employeeData}
                       data_name={'name'}
@@ -186,11 +185,10 @@ const AddLeave = () => {
                       handleChange={handleChange}
                       clear={clear}
                       setClear={setClear}
-                      width={'12rem'}
                       radius={'5px'}
                     />
                   </td>
-                  <td className="border border-white-600">
+                  <td className="border border-white-600 w-[12rem]">
                     <Select
                       data={leaveData}
                       data_name={'leave_name'}
@@ -202,7 +200,6 @@ const AddLeave = () => {
                       handleChange={handleChange}
                       clear={clear}
                       setClear={setClear}
-                      width={'12rem'}
                       radius={'5px'}
                     />
                   </td>

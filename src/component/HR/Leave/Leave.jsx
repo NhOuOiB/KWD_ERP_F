@@ -1,7 +1,8 @@
-import { useEffect, useState } from 'react';
 import axios from 'axios';
-import { API_URL } from '../../../utils/config';
 import auth from '../../../auth/auth';
+import { useEffect, useState } from 'react';
+import { API_URL } from '../../../utils/config';
+import moment from 'moment/moment';
 
 const Leave = () => {
   auth();
@@ -20,25 +21,37 @@ const Leave = () => {
           <thead>
             <tr>
               <th className="p-2">休假日期</th>
-              <th>職員</th>
-              <th>休假項目</th>
-              <th>休假時數</th>
-              <th>內容</th>
+              <th className="p-2">職員</th>
+              <th className="p-2">休假項目</th>
+              <th className="p-2">休假時數</th>
+              <th className="p-2">內容</th>
               <th>申請時間</th>
             </tr>
           </thead>
           <tbody className="bg-white">
             {leave.map((v, i) => {
               return (
-                <tr className=" text-[#444] " key={i}>
-                  <td className="border-y py-2 px-2">
-                    {v.begin} ~ {v.end}
+                <tr className="text-[#444] font-bold" key={i}>
+                  <td className="border">
+                    <div className="border w-96 py-2">
+                      {v.begin} ~ {v.end}
+                    </div>
                   </td>
-                  <td className="border-y px-8">{v.name}</td>
-                  <td className="border-y px-8">{v.leave_name}</td>
-                  <td className="border-y text-right px-8">{v.hour}小時</td>
-                  <td className="border-y max-w-[16rem] w-16 px-8">{v.note}</td>
-                  <td className="border-y px-2">{v.time}</td>
+                  <td className="border">
+                    <div className="border w-40 py-2">{v.name}</div>
+                  </td>
+                  <td className="border ">
+                    <div className="border w-40 py-2">{v.leave_name}</div>
+                  </td>
+                  <td className="border ">
+                    <div className="border w-40 py-2">{v.hour}</div>
+                  </td>
+                  <td className="border ">
+                    <div className="border w-40 h-[37px] py-2">{v.note}</div>
+                  </td>
+                  <td className="border">
+                    <div className="border w-40 py-2">{moment(v.time).format('YYYY-MM-DD')}</div>
+                  </td>
                 </tr>
               );
             })}

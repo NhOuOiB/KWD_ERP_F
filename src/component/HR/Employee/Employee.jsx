@@ -1,4 +1,3 @@
-import axios from 'axios';
 import { useState, useEffect } from 'react';
 import EmployeeList from './component/EmployeeList';
 import EmployeeData from './component/EmployeeData';

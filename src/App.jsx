@@ -8,7 +8,7 @@ import Header from './component/Common/Header';
 
 function App() {
   return (
-    <BrowserRouter initialEntries={['/']} initialIndex={0}>
+    <BrowserRouter initialEntries={['/']} initialIndex={0} basename=''>
       <Header />
       <Routes>
         <Route path="/" element={<Login />}></Route>

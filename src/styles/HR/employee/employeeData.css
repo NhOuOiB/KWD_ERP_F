@@ -1,0 +1,30 @@
+input[type=radio] {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 1px;
+  height: 1px;
+  opacity: 0;
+  z-index: -1;
+}
+input[type=radio]:checked + .radio:before {
+  transform: scale(1);
+}
+
+.radio {
+  width: 18px;
+  height: 18px;
+  border-radius: 100%;
+  background: hsl(0, 0%, 90%);
+  position: relative;
+}
+.radio::before {
+  content: "";
+  display: block;
+  width: inherit;
+  height: inherit;
+  border-radius: inherit;
+  background: linear-gradient(to right bottom, hsl(189, 100%, 89%), #0369a1);
+  transform: scale(0);
+  transition: 0.2s;
+}/*# sourceMappingURL=employeeData.css.map */

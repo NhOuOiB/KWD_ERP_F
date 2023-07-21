@@ -13,7 +13,6 @@ const LeaveDays = () => {
     })();
   }, []);
 
-  console.log('employee', employee);
   return (
     <div className="h-full flex flex-col justify-center items-center ">
       <div className="">

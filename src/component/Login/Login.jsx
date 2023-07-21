@@ -33,7 +33,6 @@ const Login = () => {
     }
   }
   useEffect(() => {
-   console.log(login); 
     handleLogin();
   }, []);
 

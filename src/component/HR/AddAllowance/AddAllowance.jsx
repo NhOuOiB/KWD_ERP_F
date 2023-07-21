@@ -8,7 +8,6 @@ const AddAllowance = () => {
     (async () => {
       let res = await axios.get(`${API_URL}/getAllowance`);
       setAllowance(res.data);
-      console.log(allowance);
     })();
   }, []);
   return (

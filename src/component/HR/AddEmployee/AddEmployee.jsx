@@ -42,7 +42,6 @@ const AddEmployee = () => {
       })
     );
   }
-  console.log(input)
 
   function handleClear() {
     setInput((prevInput) =>
@@ -150,79 +149,81 @@ const AddEmployee = () => {
   }, [input[5].value]);
 
   return (
-    <div className="h-full flex flex-col justify-center items-center">
-      <div className="grid grid-cols-2 gap-x-2 gap-y-2">
-        {input.map((v, i) => {
-          return (
-            <div key={i} className="flex flex-col justify-between">
-              <label htmlFor={v.name}>
-                <span className={`block text-sm font-medium text-left ${v.null ? 'after:content-["*"] after:ml-0.5 after:text-red-500' : ''} `}>{v.chinese}</span>
-              </label>
-              <div className="flex items-center">
-                {v.type === 'radio' ? (
-                  v.option.map((o, i) => (
-                    <label key={i} className="flex items-center me-2">
-                      <div className='m-2'>{o}</div>
-                      <input type="radio" name={v.name} value={o} onChange={handleChange} className="me-1" id={v.name} />
-                      <div className="radio"></div>
-                    </label>
-                  ))
-                ) : v.type === 'checkbox' ? (
-                  v.option.map((o, i) => (
-                    <label key={i}>
-                      <input type="checkbox" name={v.name} value={o} onChange={handleChange} />
-                    </label>
-                  ))
-                ) : v.type === 'select' ? (
-                  <select
-                    name={v.name}
-                    onChange={handleChange}
-                    defaultValue={'請選擇'}
-                    className="w-full mt-1 px-3 py-2 border shadow-sm border-slate-300 placeholder-slate-400 focus:outline-none focus:border-sky-500 focus:ring-sky-500 block rounded-md sm:text-sm focus:ring-1"
-                    id={v.name}
-                  >
-                    <option disabled>請選擇</option>
-                    {v.option.map((o, i) => (
-                      <option key={i} value={o.d_id}>
-                        {o.d_name}
-                      </option>
-                    ))}
-                  </select>
-                ) : (
-                  <input
-                    type={v.type}
-                    name={v.name}
-                    min={0}
-                    className={`mt-1 px-3 py-2 border shadow-sm border-slate-300 placeholder-slate-400 focus:outline-none focus:border-sky-500 focus:ring-sky-500 block w-fit rounded-md sm:text-sm focus:ring-1 ${
-                      v.type == 'date' ? 'w-full' : ''
-                    }`}
-                    placeholder=""
-                    id={v.name}
-                    value={v.value}
-                    onChange={handleChange}
-                  />
-                )}
+    <>
+      <div className="h-full flex flex-col justify-center items-center">
+        <div className="grid grid-cols-2 gap-x-2 gap-y-2">
+          {input.map((v, i) => {
+            return (
+              <div key={i} className="flex flex-col justify-between">
+                <label htmlFor={v.name}>
+                  <span className={`block text-sm font-medium text-left ${v.null ? 'after:content-["*"] after:ml-0.5 after:text-red-500' : ''} `}>{v.chinese}</span>
+                </label>
+                <div className="flex items-center">
+                  {v.type === 'radio' ? (
+                    v.option.map((o, i) => (
+                      <label key={i} className="flex items-center me-2">
+                        <div className="m-2">{o}</div>
+                        <input type="radio" name={v.name} value={o} onChange={handleChange} className="me-1" id={v.name} />
+                        <div className="radio"></div>
+                      </label>
+                    ))
+                  ) : v.type === 'checkbox' ? (
+                    v.option.map((o, i) => (
+                      <label key={i}>
+                        <input type="checkbox" name={v.name} value={o} onChange={handleChange} />
+                      </label>
+                    ))
+                  ) : v.type === 'select' ? (
+                    <select
+                      name={v.name}
+                      onChange={handleChange}
+                      defaultValue={'請選擇'}
+                      className="w-full mt-1 px-3 py-2 border shadow-sm border-slate-300 placeholder-slate-400 focus:outline-none focus:border-sky-500 focus:ring-sky-500 block rounded-md sm:text-sm focus:ring-1"
+                      id={v.name}
+                    >
+                      <option disabled>請選擇</option>
+                      {v.option.map((o, i) => (
+                        <option key={i} value={o.d_id}>
+                          {o.d_name}
+                        </option>
+                      ))}
+                    </select>
+                  ) : (
+                    <input
+                      type={v.type}
+                      name={v.name}
+                      min={0}
+                      className={`mt-1 px-3 py-2 border shadow-sm border-slate-300 placeholder-slate-400 focus:outline-none focus:border-sky-500 focus:ring-sky-500 block w-fit rounded-md sm:text-sm focus:ring-1 ${
+                        v.type == 'date' ? 'w-full' : ''
+                      }`}
+                      placeholder=""
+                      id={v.name}
+                      value={v.value}
+                      onChange={handleChange}
+                    />
+                  )}
+                </div>
+                <div></div>
               </div>
-              <div></div>
-            </div>
-          );
-        })}
+            );
+          })}
+        </div>
+        <div className="flex flex-wrap justify-center mt-8 ">
+          <button className="mx-[3rem] flex items-center gap-2" onClick={handleSubmit}>
+            <p>送出</p>
+            <IconContext.Provider value={{ size: '1.4rem' }}>
+              <BsCheck2 />
+            </IconContext.Provider>
+          </button>
+          <button className="mx-[3rem] flex items-center gap-2" onClick={handleClear}>
+            <p>清空</p>
+            <IconContext.Provider value={{ size: '1.4rem' }}>
+              <AiOutlineClear />
+            </IconContext.Provider>
+          </button>
+        </div>
       </div>
-      <div className="flex flex-wrap justify-center mt-8 ">
-        <button className="mx-[3rem] flex items-center gap-2" onClick={handleSubmit}>
-          <p>送出</p>
-          <IconContext.Provider value={{ size: '1.4rem' }}>
-            <BsCheck2 />
-          </IconContext.Provider>
-        </button>
-        <button className="mx-[3rem] flex items-center gap-2" onClick={handleClear}>
-          <p>清空</p>
-          <IconContext.Provider value={{ size: '1.4rem' }}>
-            <AiOutlineClear />
-          </IconContext.Provider>
-        </button>
-      </div>
-    </div>
+    </>
   );
 };
 

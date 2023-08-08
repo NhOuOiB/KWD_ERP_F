@@ -6,11 +6,10 @@ import AddLeave from './AddLeave/AddLeave';
 import Employee from './Employee/Employee';
 import LeaveDays from './LeaveDays/LeaveDays';
 import AddEmployee from './AddEmployee/AddEmployee';
-import AddAllowance from './AddAllowance/AddAllowance';
-import AddDeduction from './AddDeduction/AddDeduction';
+import AddSalary from './Salary/AddSalary';
 
 const HR = () => {
-  // auth();
+  auth();
   return (
     <Routes>
       <Route path="/employee" element={<Employee />} />
@@ -18,9 +17,8 @@ const HR = () => {
       <Route path="/leave" element={<Leave />} />
       <Route path="/addLeave" element={<AddLeave />} />
       <Route path="/leaveDays" element={<LeaveDays />} />
-      <Route path="/addAllowance" element={<AddAllowance />} />
-      <Route path="/addDeduction" element={<AddDeduction />} />
       <Route path="/salary" element={<Salary />} />
+      <Route path="/addSalary" element={<AddSalary />} />
     </Routes>
   );
 };

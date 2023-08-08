@@ -61,14 +61,6 @@ const Header = () => {
               label: <Link to={'/HR/salary'}>薪資計算</Link>,
               key: 'salary',
             },
-            {
-              label: <Link to={'/HR/addAllowance'}>新增津貼</Link>,
-              key: 'addAllowance',
-            },
-            {
-              label: <Link to={'/HR/addDeduction'}>新增扣除</Link>,
-              key: 'addDeduction',
-            },
           ],
         },
       ],

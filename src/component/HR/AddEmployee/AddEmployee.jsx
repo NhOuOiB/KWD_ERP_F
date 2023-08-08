@@ -1,42 +1,77 @@
-import { useState, useEffect } from 'react';
-import { API_URL } from '../../../utils/config';
 import axios from 'axios';
+import dayjs from 'dayjs';
 import { toast } from 'react-toastify';
-import { useNavigate } from 'react-router-dom';
+import Select from '../../Common/Select';
+import { DatePicker, Space } from 'antd';
 import { IconContext } from 'react-icons';
 import { BsCheck2 } from 'react-icons/bs';
+import { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { API_URL } from '../../../utils/config';
 import { AiOutlineClear } from 'react-icons/ai';
 
 const AddEmployee = () => {
   const navigate = useNavigate();
 
+  const [page, setPage] = useState('基本資料');
+  const [clear, setClear] = useState(false);
   const [input, setInput] = useState([
     { chinese: '員工編號', name: 'employee_id', null: true, value: '', type: 'number' },
-    { chinese: '姓名', name: 'name', null: true, value: '', type: 'text' },
+    { chinese: '姓名', name: 'name', null: true, value: '', type: 'text', maxLength: 5 },
     { chinese: '部門', name: 'department_id', null: true, value: '', type: 'select', option: [] },
     { chinese: '性別', name: 'gender', null: true, value: '', type: 'radio', option: ['男', '女'] },
     { chinese: '到職日', name: 'registration_date', null: false, value: '', type: 'date' },
     { chinese: '生日', name: 'birth', null: false, value: '', type: 'date' },
-    { chinese: '家用號碼', name: 'tel', null: false, value: '', type: 'text' },
-    { chinese: '手機號碼', name: 'phone', null: false, value: '', type: 'text' },
-    { chinese: 'E-mail', name: 'email', null: false, value: '', type: 'text' },
-    { chinese: '地址', name: 'address', null: false, value: '', type: 'text' },
-    { chinese: '緊急聯絡人', name: 'emergency_contact', null: false, value: '', type: 'text' },
-    { chinese: '緊急聯絡人電話', name: 'emergency_contact_phone', null: false, value: '', type: 'text' },
+    { chinese: '家用號碼', name: 'tel', null: false, value: '', type: 'text', maxLength: 10 },
+    { chinese: '手機號碼', name: 'phone', null: false, value: '', type: 'text', maxLength: 10 },
+    { chinese: 'E-mail', name: 'email', null: false, value: '', type: 'text', maxLength: 30 },
+    { chinese: '地址', name: 'address', null: false, value: '', type: 'text', maxLength: 50 },
+    { chinese: '緊急聯絡人', name: 'emergency_contact', null: false, value: '', type: 'text', maxLength: 5 },
+    { chinese: '緊急聯絡人電話', name: 'emergency_contact_phone', null: false, value: '', type: 'text', maxLength: 10 },
     { chinese: '星座', name: 'sign', null: false, value: '', type: 'text' },
-    { chinese: '最高學歷', name: 'education', null: false, value: '', type: 'text' },
-    { chinese: '分機', name: 'ext', null: false, value: '', type: 'number' },
-    { chinese: '備註', name: 'note', null: false, value: '', type: 'text' },
+    { chinese: '最高學歷', name: 'education', null: false, value: '', type: 'text', maxLength: 20 },
+    { chinese: '分機', name: 'ext', null: false, value: '', type: 'number', maxLength: 11 },
+    { chinese: '備註', name: 'note', null: false, value: '', type: 'text', maxLength: 50 },
+    { chinese: '加保眷屬姓名1', name: 'family_dependant_name_1', null: false, value: '', type: 'text', maxLength: 5 },
+    { chinese: '加保眷屬關係1', name: 'family_dependant_relationship_1', null: false, value: '', type: 'text', maxLength: 2 },
+    { chinese: '加保眷屬姓名2', name: 'family_dependant_name_2', null: false, value: '', type: 'text', maxLength: 5 },
+    { chinese: '加保眷屬關係2', name: 'family_dependant_relationship_2', null: false, value: '', type: 'text', maxLength: 2 },
+    { chinese: '加保眷屬姓名3', name: 'family_dependant_name_3', null: false, value: '', type: 'text', maxLength: 5 },
+    { chinese: '加保眷屬關係3', name: 'family_dependant_relationship_3', null: false, value: '', type: 'text', maxLength: 2 },
+    { chinese: '加保眷屬姓名4', name: 'family_dependant_name_4', null: false, value: '', type: 'text', maxLength: 5 },
+    { chinese: '加保眷屬關係4', name: 'family_dependant_relationship_4', null: false, value: '', type: 'text', maxLength: 2 },
+    { chinese: '加保眷屬姓名5', name: 'family_dependant_name_5', null: false, value: '', type: 'text', maxLength: 5 },
+    { chinese: '加保眷屬關係5', name: 'family_dependant_relationship_5', null: false, value: '', type: 'text', maxLength: 2 },
+    { chinese: '銀行帳號', name: 'bank', null: false, value: '', type: 'text', maxLength: 20 },
+    { chinese: '額外提撥', name: 'six', null: false, value: '', type: 'number', maxLength: 1 },
+    { chinese: '薪資', name: 'salary', null: true, value: '', type: 'number', maxLength: 1 },
   ]);
 
-  function handleChange(e) {
+  function handleChange(e, id, name) {
     setInput((prevInput) =>
       prevInput.map((v) => {
-        if (v.name == e.target.name) {
-          if (v.type == 'checkbox') {
-            return { ...v, value: `${e.target.checked}` };
+        if (name) {
+          if (v.name == name) {
+            return { ...v, value: e.target.value };
           }
-          return { ...v, value: e.target.value };
+        } else {
+          if (v.name == e.target.name) {
+            if (v.type == 'checkbox') {
+              return { ...v, value: `${e.target.checked}` };
+            }
+            return { ...v, value: e.target.value };
+          }
+        }
+        return v;
+      })
+    );
+  }
+
+  function handleChangeTime(value, dateString, key) {
+    setInput((prevInput) =>
+      prevInput.map((v) => {
+        if (v.name == key) {
+          return { ...v, value: dateString };
         }
         return v;
       })
@@ -53,7 +88,7 @@ const AddEmployee = () => {
             radio.checked = false;
           });
         } else if (v.type == 'select') {
-          document.getElementById(`${v.name}`).value = '請選擇';
+          setClear(true);
         }
         return { ...v, value: '' };
       })
@@ -133,8 +168,8 @@ const AddEmployee = () => {
         prevInput.map((v) => {
           if (v.name === 'department_id') {
             let newOption = result.data.map((v2) => ({
-              d_id: v2.department_id,
-              d_name: v2.department_name,
+              department_id: v2.department_id,
+              department_name: v2.department_name,
             }));
             return { ...v, option: newOption };
           }
@@ -150,64 +185,132 @@ const AddEmployee = () => {
 
   return (
     <>
-      <div className="h-full flex flex-col justify-center items-center">
-        <div className="grid grid-cols-2 gap-x-2 gap-y-2">
-          {input.map((v, i) => {
-            return (
-              <div key={i} className="flex flex-col justify-between">
-                <label htmlFor={v.name}>
-                  <span className={`block text-sm font-medium text-left ${v.null ? 'after:content-["*"] after:ml-0.5 after:text-red-500' : ''} `}>{v.chinese}</span>
-                </label>
-                <div className="flex items-center">
-                  {v.type === 'radio' ? (
-                    v.option.map((o, i) => (
-                      <label key={i} className="flex items-center me-2">
-                        <div className="m-2">{o}</div>
-                        <input type="radio" name={v.name} value={o} onChange={handleChange} className="me-1" id={v.name} />
-                        <div className="radio"></div>
-                      </label>
-                    ))
-                  ) : v.type === 'checkbox' ? (
-                    v.option.map((o, i) => (
-                      <label key={i}>
-                        <input type="checkbox" name={v.name} value={o} onChange={handleChange} />
-                      </label>
-                    ))
-                  ) : v.type === 'select' ? (
-                    <select
-                      name={v.name}
-                      onChange={handleChange}
-                      defaultValue={'請選擇'}
-                      className="w-full mt-1 px-3 py-2 border shadow-sm border-slate-300 placeholder-slate-400 focus:outline-none focus:border-sky-500 focus:ring-sky-500 block rounded-md sm:text-sm focus:ring-1"
-                      id={v.name}
-                    >
-                      <option disabled>請選擇</option>
-                      {v.option.map((o, i) => (
-                        <option key={i} value={o.d_id}>
-                          {o.d_name}
-                        </option>
-                      ))}
-                    </select>
-                  ) : (
-                    <input
-                      type={v.type}
-                      name={v.name}
-                      min={0}
-                      className={`mt-1 px-3 py-2 border shadow-sm border-slate-300 placeholder-slate-400 focus:outline-none focus:border-sky-500 focus:ring-sky-500 block w-fit rounded-md sm:text-sm focus:ring-1 ${
-                        v.type == 'date' ? 'w-full' : ''
-                      }`}
-                      placeholder=""
-                      id={v.name}
-                      value={v.value}
-                      onChange={handleChange}
-                    />
-                  )}
-                </div>
-                <div></div>
-              </div>
-            );
-          })}
+      <div className="h-full flex flex-col items-center">
+        <div className="my-20 flex">
+          <div
+            className={`px-4 py-2  rounded cursor-pointer ${page === '基本資料' ? 'bg-white text-blue-900' : 'bg-zinc-600'}`}
+            onClick={() => {
+              setPage('基本資料');
+            }}
+          >
+            基本資料
+          </div>
+          <div
+            className={`px-4 py-2 rounded cursor-pointer ${page === '計算相關' ? 'bg-white text-blue-900' : 'bg-zinc-600'}`}
+            onClick={() => {
+              setPage('計算相關');
+            }}
+          >
+            計算相關
+          </div>
+          <div></div>
         </div>
+        {page === '計算相關' && (
+          <div>
+            <div className="grid grid-cols-2 gap-x-2 gap-y-2">
+              {input.map((v, i) => {
+                return (
+                  i >= 16 && (
+                    <div key={i}>
+                      <label htmlFor={v.name}>
+                        <span className={`block text-sm font-medium text-left ${v.null ? 'after:content-["*"] after:ml-0.5 after:text-red-500' : ''} `}>{v.chinese}</span>
+                      </label>
+                      <input
+                        type={v.type}
+                        name={v.name}
+                        min={0}
+                        className={`mt-1 px-3 py-2 border shadow-sm bg-white text-[#444] border-slate-300 placeholder-slate-400 focus:outline-none focus:border-sky-500 focus:ring-sky-500 block w-fit rounded-md sm:text-sm focus:ring-1 ${
+                          v.type === 'date' ? 'w-full' : ''
+                        }`}
+                        placeholder=""
+                        id={v.name}
+                        value={v.value}
+                        onChange={handleChange}
+                        maxLength={v.maxLength}
+                      />
+                    </div>
+                  )
+                );
+              })}
+            </div>
+          </div>
+        )}
+        {page === '基本資料' && (
+          <div className="grid grid-cols-2 gap-x-2 gap-y-2">
+            {input.map((v, i) => {
+              return (
+                i < 16 && (
+                  <div key={i} className="flex flex-col justify-between">
+                    <label htmlFor={v.name}>
+                      <span className={`block text-sm font-medium text-left ${v.null ? 'after:content-["*"] after:ml-0.5 after:text-red-500' : ''} `}>{v.chinese}</span>
+                    </label>
+                    <div className="flex items-center text-[#444]">
+                      {v.type === 'radio' ? (
+                        v.option.map((o, i) => (
+                          <label key={i} className="flex items-center me-2 text-white">
+                            <div className="m-2">{o}</div>
+                            <input type="radio" name={v.name} value={o} onChange={handleChange} className="me-1" id={v.name} checked={v.value == o} />
+                            <div className="radio"></div>
+                          </label>
+                        ))
+                      ) : v.type === 'checkbox' ? (
+                        v.option.map((o, i) => (
+                          <label key={i}>
+                            <input type="checkbox" name={v.name} value={o} onChange={handleChange} />
+                          </label>
+                        ))
+                      ) : v.type === 'select' ? (
+                        <div className="w-full">
+                          <Select
+                            data={v.option}
+                            data_name={'department_name'}
+                            data_id={'department_id'}
+                            main_clr={'white'}
+                            text_clr={'#444'}
+                            selected_clr={'rgb(186 230 253 )'}
+                            order={v.department_id}
+                            handleChange={handleChange}
+                            clear={clear}
+                            setClear={setClear}
+                            padding={'5px'}
+                            radius={'5px'}
+                            inside_padding={'5.795px'}
+                            hover_clr={'#444'}
+                            defaultValue={input[2].value}
+                          />
+                        </div>
+                      ) : v.type === 'date' ? (
+                        <Space direction="vertical" className="w-full">
+                          <DatePicker
+                            value={v.value ? dayjs(v.value, 'YYYY-MM-DD') : ''}
+                            placeholder="請選擇時間"
+                            onChange={(value, dateString) => handleChangeTime(value, dateString, v.name)}
+                            className="w-full"
+                          />
+                        </Space>
+                      ) : (
+                        <input
+                          type={v.type}
+                          name={v.name}
+                          min={0}
+                          className={`mt-1 px-3 py-2 border shadow-sm bg-white border-slate-300 placeholder-slate-400 focus:outline-none focus:border-sky-500 focus:ring-sky-500 block w-fit rounded-md sm:text-sm focus:ring-1 ${
+                            v.type == 'date' ? 'w-full' : ''
+                          }`}
+                          placeholder=""
+                          id={v.name}
+                          value={v.value}
+                          onChange={handleChange}
+                          maxLength={v.maxLength}
+                        />
+                      )}
+                    </div>
+                    <div></div>
+                  </div>
+                )
+              );
+            })}
+          </div>
+        )}
         <div className="flex flex-wrap justify-center mt-8 ">
           <button className="mx-[3rem] flex items-center gap-2" onClick={handleSubmit}>
             <p>送出</p>

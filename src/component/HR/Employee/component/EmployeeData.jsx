@@ -32,7 +32,7 @@ const EmployeeData = ({ eid }) => {
   async function handleSubmit() {
     try {
       let res = await axios.put(`${API_URL}/updateEmployee`, employee);
-      toast.success(res.data, {
+      toast.success(res.data.message, {
         position: 'top-center',
         autoClose: 5000,
         hideProgressBar: false,
@@ -109,34 +109,59 @@ const EmployeeData = ({ eid }) => {
       note: '',
       status_id: '',
       status_name: '',
+      family_dependant_name_1: '',
+      family_dependant_name_2: '',
+      family_dependant_name_3: '',
+      family_dependant_name_4: '',
+      family_dependant_name_5: '',
+      family_dependant_relationship_1: '',
+      family_dependant_relationship_2: '',
+      family_dependant_relationship_3: '',
+      family_dependant_relationship_4: '',
+      family_dependant_relationship_5: '',
+      salary: '',
+      six_percent: '',
+      bank: '',
     });
     (async () => {
       const response = await axios.get(`${API_URL}/getEmployeeById?eid=${eid}`);
       const data = response.data[0] || {}; // 預設為空物件
       const {
-        id ,
-        employee_id ,
-        name ,
+        id,
+        employee_id,
+        name,
         department_id,
-        department_name ,
-        registration_date ,
-        leave_date ,
-        tel ,
-        phone ,
-        email ,
-        address ,
-        gender ,
+        department_name,
+        registration_date,
+        leave_date,
+        tel,
+        phone,
+        email,
+        address,
+        gender,
         ext,
-        emergency_contact ,
-        emergency_contact_phone ,
-        birth ,
-        sign ,
-        education ,
-        note ,
-        status ,
-        status_name ,
+        emergency_contact,
+        emergency_contact_phone,
+        birth,
+        sign,
+        education,
+        note,
+        status,
+        status_name,
+        family_dependant_name_1,
+        family_dependant_name_2,
+        family_dependant_name_3,
+        family_dependant_name_4,
+        family_dependant_name_5,
+        family_dependant_relationship_1,
+        family_dependant_relationship_2,
+        family_dependant_relationship_3,
+        family_dependant_relationship_4,
+        family_dependant_relationship_5,
+        salary,
+        six_percent,
+        bank,
       } = data;
-
       setEmployee({
         id,
         employee_id,
@@ -159,6 +184,19 @@ const EmployeeData = ({ eid }) => {
         note,
         status_id: status,
         status_name,
+        family_dependant_name_1,
+        family_dependant_name_2,
+        family_dependant_name_3,
+        family_dependant_name_4,
+        family_dependant_name_5,
+        family_dependant_relationship_1,
+        family_dependant_relationship_2,
+        family_dependant_relationship_3,
+        family_dependant_relationship_4,
+        family_dependant_relationship_5,
+        salary,
+        six_percent,
+        bank,
       });
 
       let department_data = await axios.get(`${API_URL}/getDepartmentName`);
@@ -219,6 +257,7 @@ const EmployeeData = ({ eid }) => {
                       className="w-full"
                       onChange={(value, dateString) => handleChangeTime(value, dateString, 'registration_date')}
                       value={employee.registration_date ? dayjs(employee.registration_date) : ''}
+                      placeholder="請選擇時間"
                     />
                   </Space>
                 </div>
@@ -239,6 +278,7 @@ const EmployeeData = ({ eid }) => {
                       className="w-full"
                       onChange={(value, dateString) => handleChangeTime(value, dateString, 'leave_date')}
                       value={employee.leave_date ? dayjs(employee.leave_date) : ''}
+                      placeholder="請選擇時間"
                     />
                   </Space>
                 </div>
@@ -328,6 +368,7 @@ const EmployeeData = ({ eid }) => {
                       className="w-full"
                       onChange={(value, dateString) => handleChangeTime(value, dateString, 'birth')}
                       value={employee.birth ? dayjs(employee.birth) : ''}
+                      placeholder="請選擇時間"
                     />
                   </Space>
                 </div>
@@ -433,6 +474,202 @@ const EmployeeData = ({ eid }) => {
             </div>
           ) : (
             <span className="w-5/6 h-fit min-h-[2.393rem] p-1 border border-transparent ">{employee.status_name}</span>
+          )}
+        </div>
+        <div className="flex gap-1">
+          <div className="w-1/2">
+            <div className="flex items-center mb-2">
+              <label htmlFor="" className="w-1/3 font-bold">
+                眷屬姓名1
+              </label>
+              {edit === true ? (
+                <input
+                  onChange={(e) => handleChange(e)}
+                  type="text"
+                  name="family_dependant_name_1"
+                  value={employee.family_dependant_name_1}
+                  className="bg-white border rounded-none w-2/3 p-1"
+                />
+              ) : (
+                <span className="w-2/3 h-fit min-h-[2.393rem] p-1 border border-transparent ">{employee.family_dependant_name_1}</span>
+              )}
+            </div>
+            <div className="flex items-center mb-2">
+              <label htmlFor="" className="w-1/3 font-bold">
+                眷屬姓名2
+              </label>
+              {edit === true ? (
+                <input
+                  onChange={(e) => handleChange(e)}
+                  type="text"
+                  name="family_dependant_name_2"
+                  value={employee.family_dependant_name_2}
+                  className="bg-white border rounded-none w-2/3 p-1"
+                />
+              ) : (
+                <span className="w-2/3 h-fit min-h-[2.393rem] p-1 border border-transparent ">{employee.family_dependant_name_2}</span>
+              )}
+            </div>
+            <div className="flex items-center mb-2">
+              <label htmlFor="" className="w-1/3 font-bold">
+                眷屬姓名3
+              </label>
+              {edit === true ? (
+                <input
+                  onChange={(e) => handleChange(e)}
+                  type="text"
+                  name="family_dependant_name_3"
+                  value={employee.family_dependant_name_3}
+                  className="bg-white border rounded-none w-2/3 p-1"
+                />
+              ) : (
+                <span className="w-2/3 h-fit min-h-[2.393rem] p-1 border border-transparent ">{employee.family_dependant_name_3}</span>
+              )}
+            </div>
+            <div className="flex items-center mb-2">
+              <label htmlFor="" className="w-1/3 font-bold">
+                眷屬姓名4
+              </label>
+              {edit === true ? (
+                <input
+                  onChange={(e) => handleChange(e)}
+                  type="text"
+                  name="family_dependant_name_4"
+                  value={employee.family_dependant_name_4}
+                  className="bg-white border rounded-none w-2/3 p-1"
+                />
+              ) : (
+                <span className="w-2/3 h-fit min-h-[2.393rem] p-1 border border-transparent ">{employee.family_dependant_name_4}</span>
+              )}
+            </div>
+            <div className="flex items-center mb-2">
+              <label htmlFor="" className="w-1/3 font-bold">
+                眷屬姓名5
+              </label>
+              {edit === true ? (
+                <input
+                  onChange={(e) => handleChange(e)}
+                  type="text"
+                  name="family_dependant_name_5"
+                  value={employee.family_dependant_name_5}
+                  className="bg-white border rounded-none w-2/3 p-1"
+                />
+              ) : (
+                <span className="w-2/3 h-fit min-h-[2.393rem] p-1 border border-transparent ">{employee.family_dependant_name_5}</span>
+              )}
+            </div>
+            <div className="flex items-center mb-2">
+              <label htmlFor="" className="w-1/3 font-bold">
+                薪資
+              </label>
+              {edit === true ? (
+                <input onChange={(e) => handleChange(e)} type="number" name="salary" value={employee.salary} className="bg-white border rounded-none w-2/3 p-1" />
+              ) : (
+                <span className="w-2/3 h-fit min-h-[2.393rem] p-1 border border-transparent ">{employee.salary}</span>
+              )}
+            </div>
+          </div>
+          <div className="w-1/2">
+            <div className="flex items-center mb-2">
+              <label htmlFor="" className="w-1/3 font-bold">
+                眷屬關係1
+              </label>
+              {edit === true ? (
+                <input
+                  onChange={(e) => handleChange(e)}
+                  type="text"
+                  name="family_dependant_relationship_1"
+                  value={employee.family_dependant_relationship_1}
+                  className="bg-white border rounded-none w-2/3 p-1"
+                />
+              ) : (
+                <span className="w-2/3 h-fit min-h-[2.393rem] p-1 border border-transparent ">{employee.family_dependant_relationship_1}</span>
+              )}
+            </div>
+            <div className="flex items-center mb-2">
+              <label htmlFor="" className="w-1/3 font-bold">
+                眷屬關係2
+              </label>
+              {edit === true ? (
+                <input
+                  onChange={(e) => handleChange(e)}
+                  type="text"
+                  name="family_dependant_relationship_2"
+                  value={employee.family_dependant_relationship_2}
+                  className="bg-white border rounded-none w-2/3 p-1"
+                />
+              ) : (
+                <span className="w-2/3 h-fit min-h-[2.393rem] p-1 border border-transparent ">{employee.family_dependant_relationship_2}</span>
+              )}
+            </div>
+            <div className="flex items-center mb-2">
+              <label htmlFor="" className="w-1/3 font-bold">
+                眷屬關係3
+              </label>
+              {edit === true ? (
+                <input
+                  onChange={(e) => handleChange(e)}
+                  type="text"
+                  name="family_dependant_relationship_3"
+                  value={employee.family_dependant_relationship_3}
+                  className="bg-white border rounded-none w-2/3 p-1"
+                />
+              ) : (
+                <span className="w-2/3 h-fit min-h-[2.393rem] p-1 border border-transparent ">{employee.family_dependant_relationship_3}</span>
+              )}
+            </div>
+            <div className="flex items-center mb-2">
+              <label htmlFor="" className="w-1/3 font-bold">
+                眷屬關係4
+              </label>
+              {edit === true ? (
+                <input
+                  onChange={(e) => handleChange(e)}
+                  type="text"
+                  name="family_dependant_relationship_4"
+                  value={employee.family_dependant_relationship_4}
+                  className="bg-white border rounded-none w-2/3 p-1"
+                />
+              ) : (
+                <span className="w-2/3 h-fit min-h-[2.393rem] p-1 border border-transparent ">{employee.family_dependant_relationship_4}</span>
+              )}
+            </div>
+            <div className="flex items-center mb-2">
+              <label htmlFor="" className="w-1/3 font-bold">
+                眷屬關係5
+              </label>
+              {edit === true ? (
+                <input
+                  onChange={(e) => handleChange(e)}
+                  type="text"
+                  name="family_dependant_relationship_5"
+                  value={employee.family_dependant_relationship_5}
+                  className="bg-white border rounded-none w-2/3 p-1"
+                />
+              ) : (
+                <span className="w-2/3 h-fit min-h-[2.393rem] p-1 border border-transparent ">{employee.family_dependant_relationship_5}</span>
+              )}
+            </div>
+            <div className="flex items-center mb-2">
+              <label htmlFor="" className="w-1/3 font-bold">
+                額外提撥
+              </label>
+              {edit === true ? (
+                <input onChange={(e) => handleChange(e)} type="number" name="six_percent" value={employee.six_percent} className="bg-white border rounded-none w-2/3 p-1" />
+              ) : (
+                <span className="w-2/3 h-fit min-h-[2.393rem] p-1 border border-transparent ">{employee.six_percent}</span>
+              )}
+            </div>
+          </div>
+        </div>
+        <div className="flex items-center mb-2">
+          <label htmlFor="" className="w-1/6 font-bold ">
+            銀行帳號
+          </label>
+          {edit === true ? (
+            <input onChange={(e) => handleChange(e)} type="text" name="bank" value={employee.bank} className="bg-white border rounded-none w-5/6 p-1" />
+          ) : (
+            <span className="w-5/6 h-fit min-h-[2.393rem] p-1 border border-transparent ">{employee.bank}</span>
           )}
         </div>
       </div>

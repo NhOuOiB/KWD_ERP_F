@@ -6,12 +6,12 @@ import { DatePicker, Space, Input } from 'antd';
 import { toast } from 'react-toastify';
 import { IconContext } from 'react-icons';
 import { AiOutlineClear } from 'react-icons/ai';
-import { MdOutlineCancel } from 'react-icons/md';
+import { MdOutlineClose } from 'react-icons/md';
 import { BsPlusCircleFill, BsClipboard2Check } from 'react-icons/bs';
+import dayjs from 'dayjs';
 
 const AddLeave = () => {
   const { TextArea } = Input;
-  const { RangePicker } = DatePicker;
   const [leaveData, setLeaveData] = useState([]);
   const [employeeData, setEmployeeData] = useState([]);
   const [clear, setClear] = useState(false);
@@ -28,8 +28,8 @@ const AddLeave = () => {
   ]);
 
   // 抓出勤時間
-  const onChangeTime = (value, dateString, id) => {
-    setLeave((prevLeave) => prevLeave.map((v) => (v.id === id ? { ...v, begin: dateString[0], end: dateString[1] } : v)));
+  const onChangeTime = (dateString, id, key) => {
+    setLeave((prevLeave) => prevLeave.map((v) => (v.id === id ? { ...v, [key]: dateString } : v)));
   };
 
   // 新增請假物件
@@ -79,13 +79,22 @@ const AddLeave = () => {
     let reject;
     leave.map((v, i) => {
       if (v.begin == '' || v.end == '' || v.employee_id == '' || v.leave_id == '' || v.hour == '') {
-        reject = true;
-      } else {
-        reject = false;
+        reject = '有內容未填';
+      } else if (v.hour == 0) {
+        reject = '時數不可為0';
+      } else if (v.leave_id == 3) {
+        employeeData.map((v2) => {
+          if (v.employee_id == v2.employee_id) {
+            if (v2.specialLeave * 8 - v2.total_hour - v.hour < 0) {
+              reject = `${v2.name}沒辦法請這麼多特休唷`;
+            }
+          }
+        });
       }
     });
+
     if (reject) {
-      toast.error('有內容未填', {
+      toast.error(reject, {
         position: 'top-center',
         autoClose: 5000,
         hideProgressBar: false,
@@ -95,18 +104,19 @@ const AddLeave = () => {
         theme: 'dark',
       });
       return false;
+    } else {
+      let res = await axios.post(`${API_URL}/addLeave`, leave);
+      toast.success(res.data, {
+        position: 'top-center',
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        theme: 'dark',
+      });
+      handleClear();
     }
-    let res = await axios.post(`${API_URL}/addLeave`, leave);
-    toast.success(res.data, {
-      position: 'top-center',
-      autoClose: 5000,
-      hideProgressBar: false,
-      closeOnClick: true,
-      pauseOnHover: true,
-      draggable: true,
-      theme: 'dark',
-    });
-    handleClear();
   }
 
   // 抓職員、假別選項
@@ -136,7 +146,7 @@ const AddLeave = () => {
         <table className="table-auto shadow shadow-gray-600">
           <thead>
             <tr>
-              <th></th>
+              {leave.length >= 2 && <th></th>}
               <th className="p-2">休假日期</th>
               <th>職員</th>
               <th>休假項目</th>
@@ -148,27 +158,44 @@ const AddLeave = () => {
             {leave.map((v, i) => {
               return (
                 <tr className="border border-white-600 " key={i}>
-                  <td className="">
-                    {leave.length >= 2 ? (
-                      <div className="cursor-pointer" onClick={(e) => handleDelete(e, v.id)}>
-                        <IconContext.Provider value={{ size: '1.2rem', color: 'red' }}>
-                          <MdOutlineCancel />
+                  {leave.length >= 2 ? (
+                    <td className="bg-red-500 cursor-pointer" onClick={(e) => handleDelete(e, v.id)}>
+                      <div>
+                        <IconContext.Provider value={{ size: '1.2rem', color: '' }}>
+                          <MdOutlineClose />
                         </IconContext.Provider>
                       </div>
-                    ) : (
-                      ''
-                    )}
-                  </td>
-                  <td className="border-0 border-white-600 ">
-                    <Space direction="vertical" className={'border border-transparent  '}>
-                      <RangePicker
+                    </td>
+                  ) : (
+                    ''
+                  )}
+                  <td className="border-0 border-white-600 text-[#444]">
+                    <Space direction="vertical" className={'border border-transparent'}>
+                      <DatePicker
                         showTime={{
                           format: 'HH',
                         }}
                         format="YYYY-MM-DD HH"
-                        id="leave_date"
-                        onChange={(value, dateString) => onChangeTime(value, dateString, v.id)}
+                        id="begin"
+                        onChange={(value, dateString) => onChangeTime(dateString, v.id, 'begin')}
+                        className={'py-3 h-14 text-[#444] hover:bg-gray-300'}
+                        placeholder="請選擇開始時間"
+                        value={v.begin ? dayjs(v.begin, 'YYYY-MM-DD HH') : ''}
+                        bordered={false}
+                      />
+                    </Space>
+                    -
+                    <Space direction="vertical" className={'border border-transparent'}>
+                      <DatePicker
+                        showTime={{
+                          format: 'HH',
+                        }}
+                        format="YYYY-MM-DD HH"
+                        id="end"
+                        onChange={(value, dateString) => onChangeTime(dateString, v.id, 'end')}
                         className={'py-3 h-14 hover:bg-gray-300'}
+                        placeholder="請選擇結束時間"
+                        value={v.end ? dayjs(v.end, 'YYYY-MM-DD HH') : ''}
                         bordered={false}
                       />
                     </Space>

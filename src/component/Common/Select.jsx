@@ -19,6 +19,7 @@ const Select = ({
   border_hover,
   radius,
   defaultValue,
+  inside_padding,
 }) => {
   const [selected, setSelected] = useState(defaultValue ? `${data.find((v) => v[data_id] === defaultValue)[data_name]}` : '請選擇');
   const [display, setDisplay] = useState(false);
@@ -50,21 +51,20 @@ const Select = ({
     <div className={`w-full min-w-[${width}]`}>
       <div className={select.select} style={{ color: text_clr, minHeight: height ? height : '' }}>
         <div
-          className={`${select.select_option} bg-[${main_clr}] ${border_hover ? `hover:border-[${border_hover}]` : ''} ${radius ? `rounded-[${radius}]` : ''}`}
+          className={`${select.select_option} bg-[${main_clr}] ${border_hover ? `hover:border-[${border_hover}]` : ''} rounded-[${radius}] `}
           style={{ border: display ? `1px solid ${border_hover}` : border ? border : '', padding: padding ? padding : '' }}
           onClick={handleClickul}
         >
           <p>{selected}</p>
         </div>
-        <div className={select.ul_container} style={{ height: display ? (data.length < 5 ? data.length * 44.5 + 20 : 5 * 44.5 + 10) : '0' }}>
+        <div className={select.ul_container} style={{ height: display ? (data.length < 5 ? data.length * 41 + 20 : 5 * 41 + 10) : '0' }}>
           <ul className={select.select_ul} style={{ background: main_clr, transform: display ? 'translateY(0px)' : 'translateY(-100%)' }} name={data_id}>
             {data.map((v, i) => {
               return (
                 <li
                   key={i}
-                  className={`${v[data_name] == selected ? select.select_li_p : select.select_li} ${hover_clr ? `hover:bg-[${hover_clr}]` : `hover:bg-[#eee]`} ${
-                    radius ? `rounded-[${radius}]` : ''
-                  }`}
+                  className={`${v[data_name] == selected ? select.select_li_p : select.select_li} hover:bg-[#eee] rounded-[${radius}] `}
+                  style={{ padding: inside_padding ? `${inside_padding}` : '10px', border: '', borderRadius: radius ? `${radius}`:'' }}
                   value={v[data_id]}
                   onClick={(e) => handleClick(e, v, data_id)}
                 >

@@ -96,6 +96,20 @@ const AddEmployee = () => {
   }
 
   async function handleSubmit() {
+    input.map((v) => {
+      if (v.null && v.value == '') {
+        toast.error(v.chinese + '未填寫', {
+          position: 'top-center',
+          autoClose: 5000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          theme: 'dark',
+        });
+        return false;
+      }
+    })
     try {
       let res = await axios.post(`${API_URL}/addEmployee`, input, {
         withCredentials: true,

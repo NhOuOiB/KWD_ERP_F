@@ -56,7 +56,7 @@ const Leave = () => {
                       <div className="border w-32 py-2">{v.leave_name}</div>
                     </td>
                     <td className="border ">
-                      <div className="border w-32 py-2">{v.hour}</div>
+                      <div className="border w-32 py-2">{v.total_hour}</div>
                     </td>
                     <td className="border ">
                       <div className="border w-32 h-[37px] py-2">{v.note}</div>

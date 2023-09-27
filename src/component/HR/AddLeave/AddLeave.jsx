@@ -24,12 +24,153 @@ const AddLeave = () => {
       leave_id: '',
       hour: '',
       note: '',
+      dateList: [],
     },
   ]);
+  const [holidayList, setholidayList] = useState([]);
+  const [leaves, setLeaves] = useState([]);
+
+  async function dateList(start, end, id) {
+    let holiday = await axios.get(`https://data.ntpc.gov.tw/api/datasets/308dcd75-6434-45bc-a95f-584da4fed251/json?size=10000`);
+    const _start = new Date(start.slice(0, 10)).getTime();
+    const _end = new Date(end.slice(0, 10)).getTime();
+    const list = [];
+    let result = [];
+    let current = _start;
+    while (current <= _end) {
+      const formated = new Date(current);
+      list.push([formated.getFullYear(), formated.getMonth() + 1, formated.getDate()].join('/'));
+      current += 24 * 60 * 60 * 1000;
+    }
+    result = list.filter((date) => {
+      return !holiday.data.some((item) => item.date === date && item.holidaycategory !== '補行上班日');
+    });
+
+    const groupedByMonth = result.reduce((groups, date) => {
+      // 將日期轉換為月份
+      const month = dayjs(date).format('YYYY-MM');
+
+      let first;
+      let last;
+      let total;
+
+      if (parseInt(start.slice(10)) < 9) {
+        first = 8;
+      } else if (parseInt(start.slice(10)) > 12 && parseInt(start.slice(10)) <= 18) {
+        if (start.slice(0, 10) == end.slice(0, 10) && parseInt(end.slice(10)) <= 18) {
+          first = parseInt(end.slice(10)) - parseInt(start.slice(10))
+        } else {
+          first = 18 - parseInt(start.slice(10));
+        }
+      } else if (parseInt(start.slice(10)) > 18) {
+        first = 0;
+      } else {
+        first = 18 - parseInt(start.slice(10)) - 1;
+      }
+      if (parseInt(end.slice(10)) > 18) {
+        last = 8;
+      } else if (parseInt(end.slice(10)) > 12 && parseInt(end.slice(10)) <= 18) {
+        if (start.slice(0, 10) == end.slice(0, 10)) {
+        last = 0
+        } else {
+          last = parseInt(end.slice(10)) - 9 - 1;
+        }
+      } else if (parseInt(end.slice(10)) < 9) {
+        last = 0;
+      } else {
+        last = parseInt(end.slice(10)) - 9;
+      }
+
+      if (groups.length > 0) {
+        if (groups[groups.length - 1]['month'] === month) {
+          groups[groups.length - 1]['dates'].push(date); // 使用 'dates' 屬性
+          if (date === dayjs(end).format('YYYY/M/D')) {
+            groups[groups.length - 1]['hour'] += last;
+          } else {
+            groups[groups.length - 1]['hour'] += 8;
+          }
+        } else {
+          if (date === dayjs(end).format('YYYY/M/D')) {
+            leave.map((v) => {
+              if (v.id == id) {
+                groups.push({ id: id, month: month, dates: [date], begin: start, end: end, hour: last, employee_id: v.employee_id, leave_id: v.leave_id, note: v.note }); // 使用 'dates' 屬性
+              }
+            });
+          } else {
+            leave.map((v) => {
+              if (v.id == id) {
+                groups.push({ id: id, month: month, dates: [date], begin: start, end: end, hour: 8, employee_id: v.employee_id, leave_id: v.leave_id, note: v.note }); // 使用 'dates' 屬性
+              }
+            });
+          }
+        }
+      } else {
+        leave.map((v) => {
+          if (v.id == id) {
+            groups.push({ id: id, month: month, dates: [date], begin: start, end: end, hour: first, employee_id: v.employee_id, leave_id: v.leave_id, note: v.note }); // 初始化 groups 並添加第一個物件
+          }
+        });
+      }
+      return groups;
+    }, []);
+
+    if (leaves.length < 1) {
+      setLeaves(groupedByMonth);
+      setLeave((prev) => {
+        const updatedLeave = prev.map((v) => {
+          let total = 0; // 初始 total 為 0
+          groupedByMonth.forEach((hour) => {
+            if (v.id === hour.id) {
+              total += hour.hour;
+            }
+          });
+          // 返回新的項目，包括計算後的 total
+          return { ...v, hour: total };
+        });
+
+        return updatedLeave; // 返回新的陣列
+      });
+    } else {
+      setLeaves((prev) => {
+        const filteredLeaves = prev.filter((v) => !groupedByMonth.some((v2) => v.id === v2.id));
+
+        // 將新的 groupedByMonth 內容添加進去
+        filteredLeaves.push(...groupedByMonth);
+        filteredLeaves.sort((a, b) => a.id - b.id);
+        return filteredLeaves;
+      });
+      setLeave((prev) => {
+        const updatedLeave = prev.map((v) => {
+          let total = 0; // 初始 total 為 0
+          groupedByMonth.forEach((hour) => {
+            if (v.id === hour.id) {
+              total += hour.hour;
+            }
+          });
+          // 返回新的項目，包括計算後的 total
+          if (v.id === id) {
+            return { ...v, hour: total };
+          } else {
+            return v
+          }
+        });
+
+        return updatedLeave; // 返回新的陣列
+      });
+    }
+  }
 
   // 抓出勤時間
   const onChangeTime = (dateString, id, key) => {
     setLeave((prevLeave) => prevLeave.map((v) => (v.id === id ? { ...v, [key]: dateString } : v)));
+
+    leave.map((v, i) => {
+      if (key === 'begin') {
+        if (id === v.id) dateList(dateString, v.end, id);
+      } else {
+        if (id === v.id) dateList(v.begin, dateString, id);
+      }
+    });
   };
 
   // 新增請假物件
@@ -52,16 +193,20 @@ const AddLeave = () => {
 
   // 刪除請假物件
   function handleDelete(e, id) {
-    let result = leave.filter((v) => v.id != id);
-    setLeave(result);
+    let leaveResult = leave.filter((v) => v.id != id);
+    setLeave(leaveResult);
+    let leavesResult = leaves.filter((v) => v.id != id);
+    setLeave(leavesResult);
   }
 
   // 變動取值
   function handleChange(e, id, name) {
     if (name) {
       setLeave((prevLeave) => prevLeave.map((v) => (v.id === id ? { ...v, [name]: e.target.value } : v)));
+      setLeaves((prev) => prev.map((v) => (v.id === id ? { ...v, [name]: e.target.value } : v)));
     } else {
       setLeave((prevLeave) => prevLeave.map((v) => (v.id === id ? { ...v, [e.target.name]: e.target.value } : v)));
+      setLeaves((prev) => prev.map((v) => (v.id === id ? { ...v, [e.target.name]: e.target.value } : v)));
     }
   }
 
@@ -71,6 +216,7 @@ const AddLeave = () => {
         return { ...v, begin: '', end: '', employee_id: '', leave_id: '', hour: '', note: '' };
       })
     );
+    setLeaves([]);
     setClear(true);
   }
 
@@ -105,7 +251,7 @@ const AddLeave = () => {
       });
       return false;
     } else {
-      let res = await axios.post(`${API_URL}/addLeave`, leave);
+      let res = await axios.post(`${API_URL}/addLeave`, leaves);
       toast.success(res.data, {
         position: 'top-center',
         autoClose: 5000,
@@ -115,10 +261,9 @@ const AddLeave = () => {
         draggable: true,
         theme: 'dark',
       });
-      handleClear();
+      // handleClear();
     }
   }
-
   // 抓職員、假別選項
   useEffect(() => {
     (async () => {
@@ -126,8 +271,23 @@ const AddLeave = () => {
       let leave = await axios.get(`${API_URL}/getLeave`);
       setEmployeeData(employee.data);
       setLeaveData(leave.data);
+
+      let holiday = await axios.get(`https://data.ntpc.gov.tw/api/datasets/308dcd75-6434-45bc-a95f-584da4fed251/json?size=10000`);
+
+      let arr = [];
+      holiday.data.map((v, i) => {
+        if (i > holiday.data.length - 240 && v.holidaycategory != '補行上班日') arr.push( v.date);
+      });
+      setholidayList(arr);
     })();
   }, []);
+  const disabledDate = (current) => {
+    // 將 current 轉換為與 disabledDates 中日期格式相同的字符串
+    const currentDate = dayjs(current).format('YYYY/M/D');
+    // 檢查 current 是否在禁用日期的列表中
+    return holidayList.includes(currentDate);
+  };
+
   return (
     <div className="h-full flex flex-col justify-center items-center">
       <div className="">
@@ -182,6 +342,7 @@ const AddLeave = () => {
                         placeholder="請選擇開始時間"
                         value={v.begin ? dayjs(v.begin, 'YYYY-MM-DD HH') : ''}
                         bordered={false}
+                        disabledDate={disabledDate}
                       />
                     </Space>
                     -
@@ -197,6 +358,7 @@ const AddLeave = () => {
                         placeholder="請選擇結束時間"
                         value={v.end ? dayjs(v.end, 'YYYY-MM-DD HH') : ''}
                         bordered={false}
+                        disabledDate={disabledDate}
                       />
                     </Space>
                   </td>

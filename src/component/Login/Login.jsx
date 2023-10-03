@@ -6,8 +6,8 @@ import { toast } from 'react-toastify';
 
 const Login = () => {
   const [login, setLogin] = useState({
-    account: 'mike',
-    password: '1234',
+    account: '',
+    password: '',
   });
   const navigate = useNavigate();
 
@@ -33,7 +33,7 @@ const Login = () => {
     }
   }
   useEffect(() => {
-    handleLogin();
+    // handleLogin();
   }, []);
 
   return (

@@ -9,6 +9,7 @@ import { AiOutlineClear } from 'react-icons/ai';
 import { MdOutlineClose } from 'react-icons/md';
 import { BsPlusCircleFill, BsClipboard2Check } from 'react-icons/bs';
 import dayjs from 'dayjs';
+import loading from '/Ellipsis-1.5s-204px.svg';
 
 const AddLeave = () => {
   const { TextArea } = Input;
@@ -29,6 +30,7 @@ const AddLeave = () => {
   ]);
   const [holidayList, setholidayList] = useState([]);
   const [leaves, setLeaves] = useState([]);
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   async function dateList(start, end, id) {
     let holiday = await axios.get(`https://data.ntpc.gov.tw/api/datasets/308dcd75-6434-45bc-a95f-584da4fed251/json?size=10000`);
@@ -58,7 +60,7 @@ const AddLeave = () => {
         first = 8;
       } else if (parseInt(start.slice(10)) > 12 && parseInt(start.slice(10)) <= 18) {
         if (start.slice(0, 10) == end.slice(0, 10) && parseInt(end.slice(10)) <= 18) {
-          first = parseInt(end.slice(10)) - parseInt(start.slice(10))
+          first = parseInt(end.slice(10)) - parseInt(start.slice(10));
         } else {
           first = 18 - parseInt(start.slice(10));
         }
@@ -71,7 +73,7 @@ const AddLeave = () => {
         last = 8;
       } else if (parseInt(end.slice(10)) > 12 && parseInt(end.slice(10)) <= 18) {
         if (start.slice(0, 10) == end.slice(0, 10)) {
-        last = 0
+          last = 0;
         } else {
           last = parseInt(end.slice(10)) - 9 - 1;
         }
@@ -151,7 +153,7 @@ const AddLeave = () => {
           if (v.id === id) {
             return { ...v, hour: total };
           } else {
-            return v
+            return v;
           }
         });
 
@@ -223,45 +225,52 @@ const AddLeave = () => {
   // 送出
   async function handleSubmit() {
     let reject;
-    leave.map((v, i) => {
-      if (v.begin == '' || v.end == '' || v.employee_id == '' || v.leave_id == '' || v.hour == '') {
-        reject = '有內容未填';
-      } else if (v.hour == 0) {
-        reject = '時數不可為0';
-      } else if (v.leave_id == 3) {
-        employeeData.map((v2) => {
-          if (v.employee_id == v2.employee_id) {
-            if (v2.specialLeave * 8 - v2.total_hour - v.hour < 0) {
-              reject = `${v2.name}沒辦法請這麼多特休唷`;
-            }
-          }
-        });
-      }
-    });
-
-    if (reject) {
-      toast.error(reject, {
-        position: 'top-center',
-        autoClose: 5000,
-        hideProgressBar: false,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true,
-        theme: 'dark',
-      });
-      return false;
+    if (isSubmitting) {
+      return;
     } else {
-      let res = await axios.post(`${API_URL}/addLeave`, leaves);
-      toast.success(res.data, {
-        position: 'top-center',
-        autoClose: 5000,
-        hideProgressBar: false,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true,
-        theme: 'dark',
+      let employee = await axios.get(`${API_URL}/getEmployee`);
+      leave.map((v, i) => {
+        if (v.begin == '' || v.end == '' || v.employee_id == '' || v.leave_id == '' || v.hour == '') {
+          reject = '有內容未填';
+        } else if (v.hour == 0) {
+          reject = '時數不可為0';
+        } else if (v.leave_id == 3) {
+          employee.data.map((v2) => {
+            if (v.employee_id == v2.employee_id) {
+              if (v2.specialLeave * 8 - v2.total_hour - v.hour < 0) {
+                reject = `${v2.name}沒辦法請這麼多特休唷`;
+              }
+            }
+          });
+        }
       });
-      // handleClear();
+      setIsSubmitting(true);
+      if (reject) {
+        toast.error(reject, {
+          position: 'top-center',
+          autoClose: 5000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          theme: 'dark',
+        });
+        setIsSubmitting(false);
+        return false;
+      } else {
+        let res = await axios.post(`${API_URL}/addLeave`, leaves);
+        toast.success(res.data, {
+          position: 'top-center',
+          autoClose: 5000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          theme: 'dark',
+        });
+        // handleClear();
+        setIsSubmitting(false);
+      }
     }
   }
   // 抓職員、假別選項
@@ -269,18 +278,19 @@ const AddLeave = () => {
     (async () => {
       let employee = await axios.get(`${API_URL}/getEmployee`);
       let leave = await axios.get(`${API_URL}/getLeave`);
-      setEmployeeData(employee.data);
-      setLeaveData(leave.data);
-
       let holiday = await axios.get(`https://data.ntpc.gov.tw/api/datasets/308dcd75-6434-45bc-a95f-584da4fed251/json?size=10000`);
 
       let arr = [];
       holiday.data.map((v, i) => {
-        if (i > holiday.data.length - 240 && v.holidaycategory != '補行上班日') arr.push( v.date);
+        if (i > holiday.data.length - 240 && v.holidaycategory != '補行上班日') arr.push(v.date);
       });
+
+      setEmployeeData(employee.data);
+      setLeaveData(leave.data);
       setholidayList(arr);
     })();
   }, []);
+
   const disabledDate = (current) => {
     // 將 current 轉換為與 disabledDates 中日期格式相同的字符串
     const currentDate = dayjs(current).format('YYYY/M/D');
@@ -297,11 +307,17 @@ const AddLeave = () => {
               <AiOutlineClear />
             </IconContext.Provider>
           </div>
-          <div className="p-2 m-2 bg-[white] rounded-md cursor-pointer" onClick={handleSubmit}>
-            <IconContext.Provider value={{ size: '1.6rem', color: 'green' }}>
-              <BsClipboard2Check />
-            </IconContext.Provider>
-          </div>
+          {isSubmitting ? (
+            <div className="p-2 m-2 bg-[white] rounded-md w-10">
+              <img src={loading} alt="" />
+            </div>
+          ) : (
+            <div className="p-2 m-2 bg-[white] rounded-md cursor-pointer" onClick={handleSubmit}>
+              <IconContext.Provider value={{ size: '1.6rem', color: 'green' }}>
+                <BsClipboard2Check />
+              </IconContext.Provider>
+            </div>
+          )}
         </div>
         <table className="table-auto shadow shadow-gray-600">
           <thead>

@@ -48,7 +48,6 @@ const ClockIn = () => {
         withCredentials: true,
       }
     );
-    console.log(res);
     if (res.data.status) {
       toast.success(res.data.message, {
         position: 'top-center',

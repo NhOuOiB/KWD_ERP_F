@@ -7,7 +7,6 @@ import { AiOutlineUser } from 'react-icons/ai';
 import { HiOutlineDocument } from 'react-icons/hi';
 import { FaRegClock } from 'react-icons/fa6';
 import logo from '/images.jpg';
-import auth from '../../auth/auth';
 import UserContext from '../../store/userContext';
 
 const Header = () => {

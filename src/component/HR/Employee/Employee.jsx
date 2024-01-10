@@ -1,10 +1,8 @@
 import { useState, useEffect } from 'react';
 import EmployeeList from './component/EmployeeList';
 import EmployeeData from './component/EmployeeData';
-import auth from '../../../auth/auth'
 
 const Employee = () => {
-  auth()
   const [eid, setEid] = useState('');
   return (
     <div className="w-full h-full flex justify-between items-center">

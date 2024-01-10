@@ -50,8 +50,6 @@ const AddSalary = () => {
       let res = await axios.get(`${API_URL}/getSalary?time=${date}`);
       if (!res.data[0].record) {
         let data = res.data[1].map((v) => {
-          console.log(v.six_percent);
-          console.log(typeof v.six_percent);
           let hour = Math.floor((v.salary / 30 / 8) * 10) / 10;
           let payForSick = -Math.round((hour * v.sick) / 2);
           let payForPersonal = -Math.round(hour * v.personal);
@@ -349,7 +347,7 @@ const AddSalary = () => {
                     <th className="w-40 h-12 border">{salary[0]?.record ? thousands(v.labor_insurance) : thousands(payForLabor)}</th>
                     <th className="w-40 h-12 border">{salary[0]?.record ? thousands(v.health_insurance) : thousands(payForHealth)}</th>
                     <th className="w-40 h-12 border">{salary[0]?.record ? thousands(v.family_dependants) : thousands(payForFamily)}</th>
-                    <th className="w-40 h-12 border" rowSpan={3}>
+                    <th className="w-40 h-12 border border-b-black" rowSpan={3}>
                       {salary[0]?.record ? (thousands(v.actually) === '' ? 0 : thousands(v.actually)) : thousands(payActually) === '' ? 0 : thousands(payActually)}
                     </th>
                   </tr>
@@ -415,19 +413,19 @@ const AddSalary = () => {
                     </th>
                   </tr>
                   <tr>
-                    <th className="w-40 h-10 border">{v.registration_date}</th>
-                    <th className="w-40 h-10 border">{v.department_name}</th>
-                    <th className="w-40 h-10 border">
+                    <th className="w-40 h-10 border border-b-black">{v.registration_date}</th>
+                    <th className="w-40 h-10 border border-b-black">{v.department_name}</th>
+                    <th className="w-40 h-10 border border-b-black">
                       {salary[0]?.record ? (thousands(v.total) === '' ? 0 : thousands(v.total)) : thousands(payTotal) === '' ? 0 : thousands(payTotal)}
                     </th>
-                    <th className="w-40 h-10 border"></th>
-                    <th className="w-40 h-10 border"></th>
-                    <th className="w-40 h-10 border"></th>
-                    <th className="w-40 h-10 border">
+                    <th className="w-40 h-10 border border-b-black"></th>
+                    <th className="w-40 h-10 border border-b-black"></th>
+                    <th className="w-40 h-10 border border-b-black"></th>
+                    <th className="w-40 h-10 border border-b-black">
                       {salary[0]?.record ? (thousands(v.deduction) === '' ? 0 : thousands(v.deduction)) : thousands(payDeduction) === '' ? 0 : thousands(payDeduction)}
                     </th>
-                    <th className="w-40 h-10 border"></th>
-                    <th className="w-40 h-10 border"></th>
+                    <th className="w-40 h-10 border border-b-black"></th>
+                    <th className="w-40 h-10 border border-b-black"></th>
                   </tr>
                 </React.Fragment>
               );

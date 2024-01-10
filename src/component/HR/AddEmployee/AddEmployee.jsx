@@ -96,9 +96,16 @@ const AddEmployee = () => {
   }
 
   async function handleSubmit() {
+    let reject = [];
     input.map((v) => {
       if (v.null && v.value == '') {
-        toast.error(v.chinese + '未填寫', {
+        reject.push(v.chinese + '未填寫');
+        return;
+      }
+    });
+    if (reject.length > 0) {
+      reject.map((v) => {
+        toast.error(v, {
           position: 'top-center',
           autoClose: 5000,
           hideProgressBar: false,
@@ -107,34 +114,35 @@ const AddEmployee = () => {
           draggable: true,
           theme: 'dark',
         });
-        return false;
-      }
-    })
-    try {
-      let res = await axios.post(`${API_URL}/addEmployee`, input, {
-        withCredentials: true,
       });
+      return false;
+    } else {
+      try {
+        let res = await axios.post(`${API_URL}/addEmployee`, input, {
+          withCredentials: true,
+        });
 
-      toast.success(res.data, {
-        position: 'top-center',
-        autoClose: 5000,
-        hideProgressBar: false,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true,
-        theme: 'dark',
-      });
-    } catch (err) {
-      toast.error(err.response.data.message, {
-        position: 'top-center',
-        autoClose: 5000,
-        hideProgressBar: false,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true,
-        theme: 'dark',
-      });
-      if (err.response.status == 401) navigate('/');
+        toast.success(res.data, {
+          position: 'top-center',
+          autoClose: 5000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          theme: 'dark',
+        });
+      } catch (err) {
+        toast.error(err.response.data.message, {
+          position: 'top-center',
+          autoClose: 5000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          theme: 'dark',
+        });
+        if (err.response.status == 401) navigate('/');
+      }
     }
     handleClear();
   }

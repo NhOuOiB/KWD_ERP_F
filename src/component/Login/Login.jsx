@@ -1,8 +1,9 @@
-import React, { useEffect, useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 import { API_URL } from '../../utils/config';
 import { toast } from 'react-toastify';
+import UserContext from '../../store/userContext';
 
 const Login = () => {
   const [login, setLogin] = useState({
@@ -10,16 +11,25 @@ const Login = () => {
     password: '',
   });
   const navigate = useNavigate();
+  const { user, setUser } = useContext(UserContext);
+  const { history } = user;
 
   function handleChange(e) {
     setLogin({ ...login, [e.target.name]: e.target.value });
   }
-  async function handleLogin(e) {
+  async function handleLogin() {
     try {
       let res = await axios.post(`${API_URL}/login`, login, {
         withCredentials: true,
       });
-      navigate('HR'); //首頁
+      let { id, name, permission } = res.data;
+      setUser({ id: id, name: name, permission: permission, history: history });
+      if (history != '') {
+        
+        navigate(history);
+      } else {
+        navigate('HR'); //首頁
+      }
     } catch (err) {
       toast.error(err.response.data.message, {
         position: 'top-center',
@@ -53,7 +63,7 @@ const Login = () => {
           onChange={handleChange}
           onKeyDown={(e) => {
             if (e.keyCode == 13) {
-              handleLogin(e);
+              handleLogin();
             }
           }}
         />
